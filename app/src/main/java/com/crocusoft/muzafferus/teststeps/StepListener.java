@@ -4,5 +4,4 @@ package com.crocusoft.muzafferus.teststeps;
 public interface StepListener {
 
     void step(long timeNs);
-
 }
