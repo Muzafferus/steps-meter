@@ -1,11 +1,11 @@
 package com.crocusoft.muzafferus.teststeps;
 
-public class SensorFilter {
+public class SensorFusionMath {
 
-    private SensorFilter(){
+    private SensorFusionMath() {
     }
 
-    public static float sum(float[] array){
+    public static float sum(float[] array) {
         float retval = 0;
         for (float anArray : array) {
             retval += anArray;
