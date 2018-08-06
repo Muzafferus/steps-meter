@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (sharedPreferences.getInt("numSteps", 0) != 0) {
                     stopService(intent);
-                    btnStart.setText(R.string.pause);
+                    btnStart.setText(R.string.resume);
                 }
             }
         });
