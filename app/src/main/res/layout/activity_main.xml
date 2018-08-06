@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Steps: 0"
+        android:text="@string/steps_0"
         android:padding="32dp"
         android:textSize="24sp"
         />
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="0.000 km"
+        android:text="@string/km_0"
         android:padding="32dp"
         android:textSize="24sp"
         />
@@ -32,14 +32,14 @@
         android:id="@+id/btn_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start Pedometer"
+        android:text="@string/start"
         />
 
     <Button
         android:id="@+id/btn_stop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Stop Pedometer"
+        android:text="@string/stop"
         />
 
 
@@ -47,7 +47,7 @@
         android:id="@+id/btn_pause"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pause Pedometer"
+        android:text="@string/pause"
         />
 
 </LinearLayout>

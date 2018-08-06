@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">TestSteps</string>
+
+    <string name="start">START PEDOMETER</string>
+    <string name="stop">STOP PEDOMETER</string>
+    <string name="pause">PAUSE PEDOMETER</string>
+    <string name="resume">RESUME PEDOMETER</string>
+    <string name="steps_0">Steps: 0</string>
+    <string name="km_0">0.000 km</string>
 </resources>

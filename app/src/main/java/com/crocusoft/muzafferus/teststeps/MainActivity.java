@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                     stopService(intent);
                     sharedPreferences.edit().putInt("numSteps", 0).apply();
                     ui();
-                    btnStart.setText("START PEDOMETER");
+                    btnStart.setText(R.string.start);
                 }
 
             }
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (sharedPreferences.getInt("numSteps", 0) != 0) {
                     stopService(intent);
-                    btnStart.setText("RESUME PEDOMETER");
+                    btnStart.setText(R.string.pause);
                 }
             }
         });
