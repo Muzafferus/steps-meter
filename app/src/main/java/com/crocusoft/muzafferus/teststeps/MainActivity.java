@@ -15,7 +15,7 @@ import java.text.DecimalFormat;
 public class MainActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     private static TextView textStep, textKm;
-    Button btnStart, btnStop;
+    Button btnStart, btnStop, btnpause;
     private static final String TEXT_NUM_STEPS = "Steps: ";
     private static final String KM = " km";
     Intent intent;
@@ -30,21 +30,21 @@ public class MainActivity extends AppCompatActivity {
         textKm = findViewById(R.id.tv_km);
         btnStart = findViewById(R.id.btn_start);
         btnStop = findViewById(R.id.btn_stop);
+        btnpause = findViewById(R.id.btn_pause);
+
         sharedPreferences = getSharedPreferences("StepCounter", Context.MODE_PRIVATE);
         intent = new Intent(MainActivity.this, CountingService.class);
 
+        if (sharedPreferences.getInt("numSteps", 0) != 0) {
+            ui();
+        }
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                if (sharedPreferences.getInt("numSteps", 0) == 0) {
-                    startService(intent);
-                }
+                startService(intent);
             }
         });
-        if (sharedPreferences.getInt("numSteps", 0) != 0) {
-            ui();
-        }
 
         btnStop.setOnClickListener(new View.OnClickListener() {
 
@@ -52,10 +52,22 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View arg0) {
                 if (sharedPreferences.getInt("numSteps", 0) != 0) {
                     stopService(intent);
+                    sharedPreferences.edit().putInt("numSteps", 0).apply();
+                    ui();
+                    btnStart.setText("START PEDOMETER");
                 }
-                sharedPreferences.edit().putInt("numSteps", 0).apply();
-                ui();
 
+            }
+        });
+
+        btnpause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (sharedPreferences.getInt("numSteps", 0) != 0) {
+                    stopService(intent);
+                    btnStart.setText("RESUME PEDOMETER");
+                }
             }
         });
     }
@@ -81,4 +93,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         sharedPreferences.edit().putBoolean("stop", true).apply();
     }
+
+
 }

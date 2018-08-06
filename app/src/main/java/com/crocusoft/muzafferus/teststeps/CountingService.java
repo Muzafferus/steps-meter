@@ -34,12 +34,13 @@ public class CountingService extends Service implements SensorEventListener, Ste
     public int onStartCommand(Intent intent, int flags, int startId) {
         sharedPreferences = getSharedPreferences("StepCounter", Context.MODE_PRIVATE);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        if (sensorManager != null) {
-            accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        }
+
+        if (sensorManager != null)
+        accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         simpleStepDetector = new SimpleStepDetector();
         simpleStepDetector.registerListener(this);
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_FASTEST);
+
         return START_STICKY;
     }
 
