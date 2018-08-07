@@ -7,4 +7,11 @@
     <string name="resume">RESUME PEDOMETER</string>
     <string name="steps_0">Steps: 0</string>
     <string name="km_0">0.000 km</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="sex">Sex:</string>
+    <string name="cm">cm</string>
+    <string name="height">Height</string>
+    <string name="save">Save</string>
+    <string name="setting">Setting</string>
 </resources>
