@@ -42,7 +42,11 @@ public class MainActivity extends AppCompatActivity {
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                startService(intent);
+                if (sharedPreferences.getInt("numSteps", 0) == 0 ||
+                        sharedPreferences.getBoolean("pause", false)) {
+                    sharedPreferences.edit().putBoolean("firsStep", true).apply();
+                    startService(intent);
+                }
             }
         });
 
@@ -55,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
                     sharedPreferences.edit().putInt("numSteps", 0).apply();
                     ui();
                     btnStart.setText(R.string.start);
+                    sharedPreferences.edit().putBoolean("pause", false).apply();
                 }
-
             }
         });
 
@@ -67,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
                 if (sharedPreferences.getInt("numSteps", 0) != 0) {
                     stopService(intent);
                     btnStart.setText(R.string.resume);
+                    sharedPreferences.edit().putBoolean("firsStep", false).apply();
+                    sharedPreferences.edit().putBoolean("pause", true).apply();
                 }
             }
         });
@@ -89,10 +95,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         sharedPreferences.edit().putBoolean("stop", true).apply();
     }
-
-
 }
