@@ -6,6 +6,10 @@
 
 # Installation
 
+## Gradle
+
+implementation 'com.google.android.gms:play-services:12.0.1'
+
 ## AndroidManifest
 
 ```bash
@@ -19,11 +23,20 @@
 
 ## MainActivity
 
+Using in onCreate method:
+
 ```bash
 Pedometer pedometer = new Pedometer();
 pedometer.start(height,
                 manOrWoman,
                 sharedPreferencesKey);
 
+```
+
+Get walk step and run distance:
+
+```bash
+double distanceRun = pedometer.getStepRunning();
+long stepWalk = pedometer.getStepWalking();
 ```
 
