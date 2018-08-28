@@ -39,14 +39,14 @@ pedometer.start(height,
 Get walk step and run distance:
 
 ```bash
-double distanceRun = pedometer.getStepRunning();
 long stepWalk = pedometer.getStepWalking();
+float distanceRun = pedometer.getStepRunning();
 ```
 
 If you want to using SharedPreferences:
 
 ```bash
 sharedPreferences.getInt("numWalkSteps", 0)
-sharedPreferences.getInt("numRunDistance", 0)
+sharedPreferences.getFloat("numRunDistance", 0)
 ```
 
