@@ -22,11 +22,12 @@ import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
-    private static TextView textStep, textKm;
+    private static TextView textViewWalk, textViewRun, textKm;
     Button btnStart, btnStop, btnpause, btn_setting;
-    private static final String TEXT_NUM_STEPS = "Steps: ";
+    private static final String TEXT_NUM_WALK = "Walking: ";
+    private static final String TEXT_NUM_RUN = "Running: ";
     private static final String KM = " km";
-    Intent intent;
+    Intent intentCountingService, intentActivityRecognizedService;
     ViewDialogHeightInfo viewDialogHeightInfo;
 
     static SharedPreferences sharedPreferences;
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textStep = findViewById(R.id.tv_steps);
+        textViewWalk = findViewById(R.id.tv_walk);
+        textViewRun = findViewById(R.id.tv_run);
         textKm = findViewById(R.id.tv_km);
         btnStart = findViewById(R.id.btn_start);
         btnStop = findViewById(R.id.btn_stop);
@@ -43,20 +45,28 @@ public class MainActivity extends AppCompatActivity {
         btn_setting = findViewById(R.id.btn_setting);
 
         sharedPreferences = getSharedPreferences("StepCounter", Context.MODE_PRIVATE);
-        intent = new Intent(MainActivity.this, CountingService.class);
+        intentCountingService = new Intent(MainActivity.this, CountingService.class);
+        intentActivityRecognizedService = new Intent(MainActivity.this, ActivityRecognizedService.class);
 
-        if (sharedPreferences.getInt("numSteps", 0) != 0) {
+        if (sharedPreferences.getInt("numWalkSteps", 0) != 0 ||
+                sharedPreferences.getInt("numRunSteps", 0) != 0) {
             ui();
         }
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                if (sharedPreferences.getInt("numSteps", 0) == 0 ||
+                if ((sharedPreferences.getInt("numWalkSteps", 0) == 0 &&
+                        sharedPreferences.getInt("numRunSteps", 0) == 0) ||
                         sharedPreferences.getBoolean("pause", false)) {
+                    sharedPreferences.edit().putBoolean("running", false).apply();
                     sharedPreferences.edit().putBoolean("firsStep", true).apply();
-                    startService(intent);
+                    startService(intentCountingService);
+                    startService(intentActivityRecognizedService);
                 }
+                Log.i("MUZAFFERUS--", "sharedPreferences.getInt(\"numWalkSteps\", 0): " + sharedPreferences.getInt("numWalkSteps", 0));
+                Log.i("MUZAFFERUS--", "sharedPreferences.getInt(\"numRunSteps\", 0): " + sharedPreferences.getInt("numRunSteps", 0));
+
             }
         });
 
@@ -64,13 +74,20 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
-                if (sharedPreferences.getInt("numSteps", 0) != 0) {
-                    stopService(intent);
-                    sharedPreferences.edit().putInt("numSteps", 0).apply();
+                if (sharedPreferences.getInt("numWalkSteps", 0) != 0 ||
+                        sharedPreferences.getInt("numRunSteps", 0) != 0) {
+                    stopService(intentCountingService);
+                    stopService(intentActivityRecognizedService);
+                    sharedPreferences.edit()
+                            .putInt("numWalkSteps", 0)
+                            .putInt("numRunSteps", 0)
+                            .apply();
                     ui();
                     btnStart.setText(R.string.start);
                     sharedPreferences.edit().putBoolean("pause", false).apply();
                 }
+                Log.i("MUZAFFERUS--", "sharedPreferences.getInt(\"numWalkSteps\", 0): " + sharedPreferences.getInt("numWalkSteps", 0));
+                Log.i("MUZAFFERUS--", "sharedPreferences.getInt(\"numRunSteps\", 0): " + sharedPreferences.getInt("numRunSteps", 0));
             }
         });
 
@@ -78,12 +95,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (sharedPreferences.getInt("numSteps", 0) != 0) {
-                    stopService(intent);
+                if (sharedPreferences.getInt("numWalkSteps", 0) != 0 ||
+                        sharedPreferences.getInt("numRunSteps", 0) != 0) {
+                    stopService(intentCountingService);
+                    stopService(intentActivityRecognizedService);
                     btnStart.setText(R.string.resume);
                     sharedPreferences.edit().putBoolean("firsStep", false).apply();
                     sharedPreferences.edit().putBoolean("pause", true).apply();
                 }
+                Log.i("MUZAFFERUS--", "sharedPreferences.getInt(\"numWalkSteps\", 0): " + sharedPreferences.getInt("numWalkSteps", 0));
+                Log.i("MUZAFFERUS--", "sharedPreferences.getInt(\"numRunSteps\", 0): " + sharedPreferences.getInt("numRunSteps", 0));
             }
         });
 
@@ -117,21 +138,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static void ui() {
-        double avarage = sharedPreferences.getFloat("stepLeighForSex", 0.00000414f) *
-                sharedPreferences.getInt("height", 175);
-        double numKm = sharedPreferences.getInt("numSteps", 0) * avarage;
-        DecimalFormat df = new DecimalFormat("0.000");
-        String km = df.format(numKm) + KM;
-        String steps = TEXT_NUM_STEPS + sharedPreferences.getInt("numSteps", 0);
-        textStep.setText(steps);
-        textKm.setText(km);
-    }
 
     @Override
     protected void onPause() {
         super.onPause();
         sharedPreferences.edit().putBoolean("stop", true).apply();
+    }
+
+    public static void ui() {
+        double avarage = sharedPreferences.getFloat("stepLeighForSex", 0.00000414f) *
+                sharedPreferences.getInt("height", 175);
+        double numKm = (sharedPreferences.getInt("numWalkSteps", 0)
+                + sharedPreferences.getInt("numRunSteps", 0)) * avarage;
+        DecimalFormat df = new DecimalFormat("0.000");
+        String km = df.format(numKm) + KM;
+        String stepWalk = TEXT_NUM_WALK + sharedPreferences.getInt("numWalkSteps", 0);
+        String stepRun = TEXT_NUM_RUN + sharedPreferences.getInt("numRunSteps", 0);
+        textViewWalk.setText(stepWalk);
+        textViewRun.setText(stepRun);
+        textKm.setText(km);
     }
 
     private class ViewDialogHeightInfo {
@@ -166,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                         sharedPreferences.edit().putInt("height", Integer.parseInt(heightText.getText().toString())).apply();
                         sharedPreferences.edit().putBoolean("firstRun", false).apply();
                         dialog.dismiss();
-                         } else {
+                    } else {
                         Toast.makeText(activity.getApplicationContext(), "Please write your height!", Toast.LENGTH_LONG).show();
                     }
                 }

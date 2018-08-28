@@ -8,11 +8,21 @@
 
 
     <TextView
-        android:id="@+id/tv_steps"
+        android:id="@+id/tv_walk"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/steps_0"
+        android:text="@string/walk_0"
+        android:padding="32dp"
+        android:textSize="24sp"
+        />
+
+    <TextView
+        android:id="@+id/tv_run"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/run_0"
         android:padding="32dp"
         android:textSize="24sp"
         />
