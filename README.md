@@ -8,17 +8,20 @@
 
 ## Gradle
 
+```bash
 implementation 'com.google.android.gms:play-services:12.0.1'
+```
 
 ## AndroidManifest
 
 ```bash
-<uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
-...
+        <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+```   
 
-        <activity android:name="com.crocusoft.muzafferus.teststeps.Pedometer" />
-        <service android:name="com.crocusoft.muzafferus.teststeps.CountingService" />
-        <service android:name="com.crocusoft.muzafferus.teststeps.ActivityRecognizedService" />
+```bash
+        <activity android:name="com.muzafferus.pedometer.Pedometer" />
+        <service android:name="com.muzafferus.pedometer.CountingService" />
+        <service android:name="com.muzafferus.pedometer.ActivityRecognizedService" />
 ```
 
 ## MainActivity
@@ -38,5 +41,12 @@ Get walk step and run distance:
 ```bash
 double distanceRun = pedometer.getStepRunning();
 long stepWalk = pedometer.getStepWalking();
+```
+
+If you want to using SharedPreferences:
+
+```bash
+sharedPreferences.getInt("numWalkSteps", 0)
+sharedPreferences.getInt("numRunDistance", 0)
 ```
 
